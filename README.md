@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Custom Range Exercise
 
-## Getting Started
+An accessible, custom-built dual-handle range selector for Next.js 16, React,
+TypeScript, and Tailwind CSS. The component uses pointer events and standard DOM
+elements; it does not use an HTML range input.
 
-First, run the development server:
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:8080](http://localhost:8080) and choose an exercise:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/exercise1` — continuous selection from the service-provided range of 1–100.
+  Click either displayed endpoint to enter a value within its allowed bounds.
+- `/exercise2` — selection snaps to the service-provided fixed price values;
+  the displayed endpoint values are read-only.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Mock services
 
-## Learn More
+- `GET /api/range/normal` returns `{ "min": 1, "max": 100 }`.
+- `GET /api/range/fixed` returns
+  `{ "values": [1.99, 5.99, 10.99, 30.99, 50.99, 70.99] }`.
 
-To learn more about Next.js, take a look at the following resources:
+## Validation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm test -- --runInBand
+npm run lint
+npx tsc --noEmit
+npm run build
+```
