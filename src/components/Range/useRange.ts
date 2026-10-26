@@ -7,13 +7,13 @@ import type {
   RangeSide,
   RangeValues,
   UseRangeResult,
-} from "./types";
+} from "@/components/Range/Range.types";
 import {
   calculatePercentage,
   clampValue,
   formatValue,
   getNearestFixedValue,
-} from "./utils";
+} from "@/components/Range/utils";
 
 export function useRange(props: RangeProps): UseRangeResult {
   const { mode, initialValues } = props;

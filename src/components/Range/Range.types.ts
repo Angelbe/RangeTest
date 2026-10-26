@@ -1,9 +1,5 @@
-import type {
-  KeyboardEvent,
-  PointerEvent,
-  ReactNode,
-  RefObject,
-} from "react";
+import type { PointerEvent, KeyboardEvent } from "react";
+import type { RefObject } from "react";
 
 export type RangeSide = "minimum" | "maximum";
 export type RangeValues = [number, number];
@@ -25,43 +21,6 @@ export interface FixedRangeProps extends RangeCommonProps {
 }
 
 export type RangeProps = NormalRangeProps | FixedRangeProps;
-
-export interface RangeLabelProps {
-  mode: RangeProps["mode"];
-  side: RangeSide;
-  value: number;
-  selected: RangeValues;
-  domainMin: number;
-  domainMax: number;
-  editing: boolean;
-  draft: string;
-  validationError: string;
-  onStartEditing: (side: RangeSide) => void;
-  onDraftChange: (draft: string) => void;
-  onCommitDraft: (side: RangeSide) => void;
-  onCancelEditing: () => void;
-}
-
-export interface RangeHandleProps {
-  side: RangeSide;
-  value: number;
-  selected: RangeValues;
-  domainMin: number;
-  domainMax: number;
-  active: boolean;
-  onPointerDown: (side: RangeSide, event: PointerEvent<HTMLElement>) => void;
-  onKeyDown: (side: RangeSide, event: KeyboardEvent<HTMLDivElement>) => void;
-}
-
-export interface RangeTrackProps {
-  trackRef: RefObject<HTMLDivElement | null>;
-  trackLabel: string;
-  minimumPosition: string;
-  maximumPosition: string;
-  minimumHandle: ReactNode;
-  maximumHandle: ReactNode;
-  onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
-}
 
 export interface UseRangeResult {
   mode: RangeProps["mode"];

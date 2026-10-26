@@ -1,38 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Range from "@/components/range";
+import Range from "@/components/Range";
+import type {
+  Configuration,
+  RangeDemoProps,
+} from "@/components/RangeDemo/RangeDemo.types";
+import {
+  isFixedConfiguration,
+  isNormalConfiguration,
+} from "@/components/RangeDemo/RangeDemo.utils";
 
-type RangeMode = "normal" | "fixed";
-type NormalConfiguration = { min: number; max: number };
-type FixedConfiguration = { values: number[] };
-type Configuration = NormalConfiguration | FixedConfiguration;
-
-function isNormalConfiguration(value: unknown): value is NormalConfiguration {
-  if (typeof value !== "object" || value === null) return false;
-  const config = value as Record<string, unknown>;
-  return (
-    typeof config.min === "number" &&
-    Number.isFinite(config.min) &&
-    typeof config.max === "number" &&
-    Number.isFinite(config.max) &&
-    config.min < config.max
-  );
-}
-
-function isFixedConfiguration(value: unknown): value is FixedConfiguration {
-  if (typeof value !== "object" || value === null) return false;
-  const config = value as Record<string, unknown>;
-  return (
-    Array.isArray(config.values) &&
-    config.values.length >= 2 &&
-    config.values.every(
-      (item): item is number => typeof item === "number" && Number.isFinite(item),
-    )
-  );
-}
-
-export default function RangeDemo({ mode }: { mode: RangeMode }) {
+export default function RangeDemo({ mode }: RangeDemoProps) {
   const [configuration, setConfiguration] = useState<Configuration | null>(null);
   const [error, setError] = useState("");
   const endpoint =

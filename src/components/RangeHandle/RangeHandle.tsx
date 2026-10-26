@@ -1,7 +1,10 @@
 "use client";
 
-import type { RangeHandleProps } from "./types";
-import { calculatePercentage, formatValue } from "./utils";
+import type { RangeHandleProps } from "@/components/RangeHandle/RangeHandle.types";
+import {
+  calculatePercentage,
+  formatValue,
+} from "@/components/Range/utils";
 
 export default function RangeHandle({
   side,

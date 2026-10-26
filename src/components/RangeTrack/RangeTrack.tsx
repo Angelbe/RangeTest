@@ -1,6 +1,6 @@
 "use client";
 
-import type { RangeTrackProps } from "./types";
+import type { RangeTrackProps } from "@/components/RangeTrack/RangeTrack.types";
 
 export default function RangeTrack({
   trackRef,

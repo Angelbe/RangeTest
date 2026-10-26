@@ -1,8 +1,8 @@
 "use client";
 
 import type { KeyboardEvent } from "react";
-import type { RangeLabelProps } from "./types";
-import { formatValue } from "./utils";
+import type { RangeLabelProps } from "@/components/RangeLabel/RangeLabel.types";
+import { formatValue } from "@/components/Range/utils";
 
 export default function RangeLabel({
   mode,

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import RangeDemo from "@/components/range-demo";
+import RangeDemo from "@/components/RangeDemo";
 
 export default function ExerciseTwoPage() {
   return (

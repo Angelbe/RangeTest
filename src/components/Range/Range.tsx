@@ -1,13 +1,17 @@
 "use client";
 
-import RangeHandle from "./RangeHandle";
-import RangeLabel from "./RangeLabel";
-import RangeTrack from "./RangeTrack";
-import type { RangeProps, RangeSide } from "./types";
-import { useRange } from "./useRange";
-import { formatValue } from "./utils";
+import RangeHandle from "@/components/RangeHandle";
+import RangeLabel from "@/components/RangeLabel";
+import RangeTrack from "@/components/RangeTrack";
+import type { RangeProps, RangeSide } from "@/components/Range/Range.types";
+import { useRange } from "@/components/Range/useRange";
+import { formatValue } from "@/components/Range/utils";
 
-export type { RangeProps, RangeSide, RangeValues } from "./types";
+export type {
+  RangeProps,
+  RangeSide,
+  RangeValues,
+} from "@/components/Range/Range.types";
 
 export default function Range(props: RangeProps) {
   const range = useRange(props);

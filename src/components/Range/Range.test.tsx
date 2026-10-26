@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "@jest/globals";
-import Range from "./range";
+import Range from "@/components/Range";
 
 const fixedValues = [1.99, 5.99, 10.99, 30.99, 50.99, 70.99];
 

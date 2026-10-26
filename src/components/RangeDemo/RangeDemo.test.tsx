@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import RangeDemo from "./range-demo";
+import RangeDemo from "@/components/RangeDemo";
 
 const originalFetchDescriptor = Object.getOwnPropertyDescriptor(
   globalThis,

@@ -4,7 +4,7 @@ import {
   clampValue,
   formatValue,
   getNearestFixedValue,
-} from "./utils";
+} from "@/components/Range/utils";
 
 describe("range utilities", () => {
   it("formats whole and fractional values consistently", () => {
