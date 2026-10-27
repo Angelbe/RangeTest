@@ -1,34 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import { afterEach, describe, expect, it } from "@jest/globals";
 import RangeDemo from "@/components/RangeDemo";
-
-const originalFetchDescriptor = Object.getOwnPropertyDescriptor(
-  globalThis,
-  "fetch",
-);
-
-function mockFetch(data: unknown, ok = true) {
-  const fetchMock = jest.fn(
-    async (
-      _input: RequestInfo | URL,
-      _init?: RequestInit,
-    ): Promise<Response> =>
-      {
-        void _input;
-        void _init;
-        return {
-          ok,
-          status: ok ? 200 : 500,
-          json: async () => data,
-        } as Response;
-      },
-  );
-  Object.defineProperty(globalThis, "fetch", {
-    configurable: true,
-    value: fetchMock,
-  });
-  return fetchMock;
-}
 
 function setTrackBounds(width = 100) {
   const track = screen.getByLabelText("Price range track");
@@ -49,26 +21,19 @@ function setTrackBounds(width = 100) {
 }
 
 afterEach(() => {
-  if (originalFetchDescriptor) {
-    Object.defineProperty(globalThis, "fetch", originalFetchDescriptor);
-  } else {
-    Reflect.deleteProperty(globalThis, "fetch");
-  }
   document.documentElement.classList.remove("range-dragging");
 });
 
 describe("RangeDemo integration", () => {
-  it("loads normal limits from its service and enforces them for manual edits", async () => {
-    const fetchMock = mockFetch({ min: 1, max: 100 });
-    render(<RangeDemo mode="normal" />);
-
-    const minimum = await screen.findByRole("slider", {
-      name: "Minimum value",
-    });
-    expect(fetchMock).toHaveBeenCalledWith(
-      "/api/range/normal",
-      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+  it("renders normal limits and enforces them for manual edits", () => {
+    render(
+      <RangeDemo
+        mode="normal"
+        initialConfiguration={{ min: 1, max: 100 }}
+      />,
     );
+
+    const minimum = screen.getByRole("slider", { name: "Minimum value" });
     expect(minimum).toHaveAttribute("aria-valuemin", "1");
     expect(screen.getByRole("slider", { name: "Maximum value" })).toHaveAttribute(
       "aria-valuemax",
@@ -84,18 +49,13 @@ describe("RangeDemo integration", () => {
     expect(minimum).toHaveAttribute("aria-valuenow", "25");
   });
 
-  it("loads fixed values from its service and snaps drag selection to an option", async () => {
+  it("renders fixed values and snaps drag selection to an option", () => {
     const values = [1.99, 5.99, 10.99, 30.99, 50.99, 70.99];
-    const fetchMock = mockFetch({ values });
-    render(<RangeDemo mode="fixed" />);
-
-    const minimum = await screen.findByRole("slider", {
-      name: "Minimum value",
-    });
-    expect(fetchMock).toHaveBeenCalledWith(
-      "/api/range/fixed",
-      expect.objectContaining({ signal: expect.any(AbortSignal) }),
+    render(
+      <RangeDemo mode="fixed" initialConfiguration={{ values }} />,
     );
+
+    const minimum = screen.getByRole("slider", { name: "Minimum value" });
     expect(minimum).toHaveAttribute("aria-valuemin", "1.99");
     expect(screen.getByRole("slider", { name: "Maximum value" })).toHaveAttribute(
       "aria-valuemax",
@@ -113,13 +73,10 @@ describe("RangeDemo integration", () => {
     expect(selectedValue).toBe(30.99);
   });
 
-  it("reports a service failure rather than rendering a default range", async () => {
-    mockFetch({}, false);
+  it("shows a fallback when configuration is missing", () => {
     render(<RangeDemo mode="normal" />);
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Range service returned 500.",
-    );
+    expect(screen.getByText("Range configuration is unavailable.")).toBeInTheDocument();
     expect(screen.queryByRole("slider")).not.toBeInTheDocument();
   });
 });

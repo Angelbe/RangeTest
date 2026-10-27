@@ -1,62 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Range from "@/components/Range";
-import type {
-  Configuration,
-  RangeDemoProps,
-} from "@/components/RangeDemo/RangeDemo.types";
+import type { RangeDemoProps } from "@/components/RangeDemo/RangeDemo.types";
 import {
   isFixedConfiguration,
   isNormalConfiguration,
 } from "@/components/RangeDemo/RangeDemo.utils";
 
-export default function RangeDemo({ mode }: RangeDemoProps) {
-  const [configuration, setConfiguration] = useState<Configuration | null>(null);
-  const [error, setError] = useState("");
-  const endpoint =
-    mode === "normal" ? "/api/range/normal" : "/api/range/fixed";
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadConfiguration() {
-      try {
-        const response = await fetch(endpoint, { signal: controller.signal });
-        if (!response.ok) {
-          throw new Error(`Range service returned ${response.status}.`);
-        }
-
-        const data: unknown = await response.json();
-        if (mode === "normal") {
-          if (!isNormalConfiguration(data)) {
-            throw new Error("Range service returned an invalid configuration.");
-          }
-          setConfiguration(data);
-        } else {
-          if (!isFixedConfiguration(data)) {
-            throw new Error("Range service returned an invalid configuration.");
-          }
-          setConfiguration(data);
-        }
-      } catch (loadError) {
-        if (loadError instanceof Error && loadError.name === "AbortError") return;
-        setError(
-          loadError instanceof Error
-            ? loadError.message
-            : "Unable to load range configuration.",
-        );
-      }
-    }
-
-    void loadConfiguration();
-    return () => controller.abort();
-  }, [endpoint, mode]);
-
-  const isLoadedConfiguration =
-    mode === "normal"
-      ? configuration !== null && "min" in configuration
-      : configuration !== null && "values" in configuration;
+export default function RangeDemo({
+  mode,
+  initialConfiguration,
+}: RangeDemoProps) {
+  const hasNormalConfiguration =
+    mode === "normal" && isNormalConfiguration(initialConfiguration);
+  const hasFixedConfiguration =
+    mode === "fixed" && isFixedConfiguration(initialConfiguration);
 
   return (
     <div className="mx-auto w-full max-w-3xl">
@@ -75,30 +33,24 @@ export default function RangeDemo({ mode }: RangeDemoProps) {
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-10">
-        {error ? (
-          <p className="rounded-lg bg-rose-50 p-4 text-sm text-rose-700" role="alert">
-            {error}
-          </p>
-        ) : !isLoadedConfiguration ? (
-          <p className="py-8 text-center text-sm text-slate-500" role="status">
-            Loading range options…
-          </p>
-        ) : mode === "normal" && configuration && "min" in configuration ? (
+        {hasNormalConfiguration ? (
           <Range
             mode="normal"
-            min={configuration.min}
-            max={configuration.max}
+            min={initialConfiguration.min}
+            max={initialConfiguration.max}
             initialValues={[25, 75]}
           />
-        ) : mode === "fixed" &&
-          configuration &&
-          "values" in configuration ? (
+        ) : hasFixedConfiguration ? (
           <Range
             mode="fixed"
-            values={configuration.values}
+            values={initialConfiguration.values}
             initialValues={[5.99, 50.99]}
           />
-        ) : null}
+        ) : (
+          <p className="py-8 text-center text-sm text-slate-500">
+            Range configuration is unavailable.
+          </p>
+        )}
 
         <div className="mt-8 flex items-center gap-2 border-t border-slate-100 pt-5 text-xs text-slate-500">
           <span

@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { getNormalRangeConfiguration } from "@/app/api/range/configurations";
 import RangeDemo from "@/components/RangeDemo";
 
-export default function ExerciseOnePage() {
+export default async function ExerciseOnePage() {
+  const initialConfiguration = await getNormalRangeConfiguration();
+
   return (
     <main className="flex-1 bg-slate-50 px-5 py-10 sm:px-8 sm:py-16">
       <div className="mx-auto mb-10 max-w-3xl">
@@ -12,7 +15,10 @@ export default function ExerciseOnePage() {
           ← All exercises
         </Link>
       </div>
-      <RangeDemo mode="normal" />
+      <RangeDemo
+        mode="normal"
+        initialConfiguration={initialConfiguration}
+      />
     </main>
   );
 }

@@ -13,4 +13,5 @@ export type Configuration = NormalConfiguration | FixedConfiguration;
 
 export interface RangeDemoProps {
   mode: RangeMode;
+  initialConfiguration?: Configuration | null;
 }
